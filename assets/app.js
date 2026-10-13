@@ -375,7 +375,23 @@
   }
 
   /* ---------------- 长图 ---------------- */
-  function svgToPng(svgStr, w, h) {
+
+  /* 客服二维码图片（base64 内嵌，永不跨域）。首次加载后缓存复用。 */
+  var _qrImg = null, _qrTried = false;
+  function loadQr() {
+    if (_qrTried) return Promise.resolve(_qrImg);
+    _qrTried = true;
+    return new Promise(function (resolve) {
+      var d = window.POOL_QR_DATA;
+      if (!d) return resolve(null);
+      var im = new Image();
+      im.onload = function () { _qrImg = im; resolve(im); };
+      im.onerror = function () { resolve(null); };
+      im.src = d;
+    });
+  }
+
+  function svgToPng(svgStr, w, h, qrImg, qrRect) {
     return new Promise(function (resolve, reject) {
       var maxPixels = 15000000;
       var scale = Math.min(2, Math.sqrt(maxPixels / (w * h)));
@@ -392,6 +408,14 @@
           ctx.fillStyle = '#F3FAFB';
           ctx.fillRect(0, 0, c.width, c.height);
           ctx.drawImage(img, 0, 0, c.width, c.height);
+          /* 叠加客服二维码：在 canvas 上直接画，绕开 SVG 内嵌图片的异步加载与跨域问题 */
+          if (qrImg && qrRect) {
+            try {
+              ctx.drawImage(qrImg,
+                Math.round(qrRect.x * scale), Math.round(qrRect.y * scale),
+                Math.round(qrRect.size * scale), Math.round(qrRect.size * scale));
+            } catch (e) { /* 二维码叠加失败不影响主图导出 */ }
+          }
           URL.revokeObjectURL(url);
           resolve({ dataUrl: c.toDataURL('image/png'), w: c.width, h: c.height });
         } catch (e) { URL.revokeObjectURL(url); reject(e); }
@@ -410,7 +434,9 @@
     if (!lastScore) { toast('结果还没生成'); return; }
     toast('正在生成长图…', 6000);
     var p = window.Poster.build(lastScore, { mistakes: QS.mistakes || {} });
-    svgToPng(p.svg, p.width, p.height).then(function (out) {
+    loadQr().then(function (qr) {
+      return svgToPng(p.svg, p.width, p.height, qr, p.qr);
+    }).then(function (out) {
       pendingImage = out;
       var name = '泳池水质人格-' + Q.TYPES[lastScore.key].name + '.png';
       if (isMobile()) {

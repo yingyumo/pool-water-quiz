@@ -258,21 +258,24 @@
     put('<text x="' + (PAD + 26) + '" y="' + (y + 50) + '" font-size="20" font-weight="600" fill="#12313A">你家池子是什么性格？</text>');
     put('<text x="' + (PAD + 26) + '" y="' + (y + 84) + '" font-size="15" fill="#4A6B75">30 道情景题 · 5 个水质维度 · 7 种池格</text>');
     put('<text x="' + (PAD + 26) + '" y="' + (y + 116) + '" font-size="13" fill="#8AA6AE">仅供趣味科普，不构成水质检测结论</text>');
-    put('<rect x="' + (W - PAD - 104) + '" y="' + (y + 30) + '" width="78" height="78" rx="8" fill="#EAF5F8" stroke="rgba(18,49,58,.12)"/>');
-    put('<g transform="translate(' + (W - PAD - 96) + ',' + (y + 38) + ')" fill="#0E8FA8">' +
-      '<rect x="0" y="0" width="17" height="17" rx="2"/><rect x="45" y="0" width="17" height="17" rx="2"/>' +
-      '<rect x="0" y="45" width="17" height="17" rx="2"/>' +
-      '<rect x="24" y="24" width="14" height="14" rx="2"/><rect x="24" y="45" width="9" height="9" rx="1"/>' +
-      '<rect x="45" y="50" width="17" height="12" rx="1"/><rect x="50" y="24" width="12" height="10" rx="1"/>' +
-      '</g>');
-    put('<text x="' + (W - PAD - 65) + '" y="' + (y + 126) + '" text-anchor="middle" font-size="12" fill="#8AA6AE">扫码测一测</text>');
+    /* 二维码：SVG 里只画一个白色底框，真正的二维码图案由 app.js 在 canvas 上叠加绘制。
+       这样既不会踩「SVG 内嵌图片异步加载可能画不出来」的坑，
+       也不会因为外部图片跨域而污染画布导致导出失败。 */
+    var QR_BOX = 82, QR_SIZE = 70, QR_CX = W - PAD - 65, QR_Y = y + 28;
+    put('<rect x="' + (QR_CX - QR_BOX / 2) + '" y="' + QR_Y + '" width="' + QR_BOX + '" height="' + QR_BOX + '" rx="10" fill="#FFFFFF" stroke="rgba(18,49,58,.12)"/>');
+    put('<text x="' + QR_CX + '" y="' + (y + 126) + '" text-anchor="middle" font-size="12" fill="#8AA6AE">扫码测一测</text>');
     y += footH + 32;
 
     var H = Math.round(y);
     var header = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" ' +
       "font-family=\"system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif\">" +
       '<rect width="' + W + '" height="' + H + '" fill="#F3FAFB"/>';
-    return { svg: header + body.join('') + '</svg>', width: W, height: H };
+    return {
+      svg: header + body.join('') + '</svg>',
+      width: W, height: H,
+      /* 交给 app.js 在 canvas 上叠加二维码用的坐标（SVG 坐标系） */
+      qr: { x: QR_CX - QR_SIZE / 2, y: QR_Y + (QR_BOX - QR_SIZE) / 2, size: QR_SIZE }
+    };
   }
 
   global.Poster = { build: build, esc: esc };
