@@ -267,11 +267,23 @@
 
     if ($('leadBtn')) {
       $('leadBtn').onclick = function () {
-        var v = ($('leadPhone').value || '').trim();
+        var el = $('leadPhone'), btn = $('leadBtn');
+        var v = (el.value || '').trim();
         if (!/^1[3-9]\d{9}$/.test(v)) { toast('请输入正确的手机号'); return; }
-        // ← 在这里接你的后端 / 表单服务（腾讯问卷、金数据、自建接口均可）
-        toast('已收到，稍后会有专人与你联系');
-        $('leadPhone').value = '';
+        btn.disabled = true; btn.textContent = '提交中…';
+        window.Store.submitLead(v, s.key, s.insider, s.mode).then(function (r) {
+          btn.disabled = false; btn.textContent = '提交';
+          if (r && r.ok) {
+            toast('已收到，稍后会有专人与你联系');
+            el.value = '';
+          } else if (r && r.reason === 'neterr') {
+            toast('网络不太顺畅，请稍后再试一次');
+          } else if (r && r.reason === 'badphone') {
+            toast('手机号格式好像不太对');
+          } else {
+            toast('提交失败，请稍后再试');
+          }
+        });
       };
     }
 

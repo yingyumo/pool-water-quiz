@@ -34,7 +34,8 @@
       url: (BE.supabaseUrl || '').replace(/\/+$/, ''),
       anonKey: BE.supabaseAnonKey || '',
       checkFn: 'pool_check_key',       // 只读校验函数
-      consumeFn: 'pool_consume_key'    // 原子扣次函数
+      consumeFn: 'pool_consume_key',   // 原子扣次函数
+      leadFn: 'pool_submit_lead'       // 结果页留资提交函数
     },
     // 本地模式下的兜底次数上限（keys.js 里没写 limit 时使用）
     DEFAULT_LIMIT: 3,
@@ -46,7 +47,8 @@
   var LS = {
     session: 'poolq_session_v1',
     usage: 'poolq_usage_v1',
-    progress: 'poolq_progress_v1'
+    progress: 'poolq_progress_v1',
+    leads: 'poolq_leads_v1'
   };
 
   /* ---------------- 基础工具 ---------------- */
@@ -247,6 +249,42 @@
     saveProgress: function (o) { writeJSON(LS.progress, o); },
     loadProgress: function () { return readJSON(LS.progress, null); },
     clearProgress: function () { rm(LS.progress); },
+
+    /* ---------------- 结果页留资（提交手机号线索） ----------------
+       cloud 模式：存进 Supabase，表对外完全不可读，只有后台能看。
+       local 模式：存本机浏览器，保证「点了提交不会静默丢失」。 */
+    submitLead: function (phone, type, insider, source) {
+      var digits = String(phone == null ? '' : phone).replace(/[^0-9]/g, '');
+      if (!/^1[3-9][0-9]{9}$/.test(digits)) {
+        return Promise.resolve({ ok: false, reason: 'badphone' });
+      }
+
+      if (cloudReady()) {
+        return sb('/rest/v1/rpc/' + CONFIG.SUPABASE.leadFn, {
+          method: 'POST',
+          body: {
+            p_phone: digits,
+            p_type: type || null,
+            p_insider: (typeof insider === 'number') ? insider : null,
+            p_source: source || null
+          }
+        }).then(function (res) {
+          if (res && res.ok) return { ok: true, mode: 'cloud' };
+          return { ok: false, reason: (res && res.reason) || 'fail', mode: 'cloud' };
+        }, function (e) {
+          return { ok: false, reason: 'neterr', detail: (e && e.message) || '', mode: 'cloud' };
+        });
+      }
+
+      var arr = readJSON(LS.leads, []);
+      if (!Array.isArray(arr)) arr = [];
+      arr.push({
+        phone: digits, type: type || '', insider: insider || null,
+        source: source || '', at: new Date().toISOString()
+      });
+      writeJSON(LS.leads, arr);
+      return Promise.resolve({ ok: true, mode: 'local' });
+    },
 
     /* ---------------- 管理后台用 ---------------- */
     _usageAll: function () { return usageMap(); },
