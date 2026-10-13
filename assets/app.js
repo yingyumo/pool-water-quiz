@@ -271,7 +271,7 @@
         var v = (el.value || '').trim();
         if (!/^1[3-9]\d{9}$/.test(v)) { toast('请输入正确的手机号'); return; }
         btn.disabled = true; btn.textContent = '提交中…';
-        window.Store.submitLead(v, s.key, s.insider, s.mode).then(function (r) {
+        window.Store.submitLead(v, s.key, s.insider, s.mode || QS.mode).then(function (r) {
           btn.disabled = false; btn.textContent = '提交';
           if (r && r.ok) {
             toast('已收到，稍后会有专人与你联系');
