@@ -10,9 +10,10 @@ window.POOL_CONFIG = {
   shopName: '初尘匠溯',
 
   /* 客服与好评有礼 —— ★ 上线前把下面两项换成你自己的 ★ */
-  serviceWechat: '请在此填写客服微信号',      // 例：'chuchen_service'
+  serviceWechat: '',                         // 客服微信号（可留空）。留空但配了二维码时，
+                                             // 弹窗会自动切换成「微信扫码添加客服」的交互。
   serviceTip: '添加客服时请备注「水质人格」',
-  qrImage: '',                               // 客服二维码图片路径，例：'assets/qr-service.png'；留空则显示占位框
+  qrImage: 'assets/qr-service.png',          // 客服二维码图片（已接入微信名片图）
   qrLabel: '扫码测一测',
 
   /* 好评有礼文案 */

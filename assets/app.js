@@ -477,13 +477,29 @@
     $('giftRefundSub').textContent = g.refundSub || '';
     $('giftNotice').textContent = g.notice || '';
     $('giftCta').textContent = g.cta || '复制客服微信';
-    $('wechatId').textContent = CFG.serviceWechat || '请填写客服微信号';
+    /* 微信号与二维码只要配了其中一个，弹窗就能正常工作 */
+    var wx = String(CFG.serviceWechat || '').trim();
+    var hasWx = !!wx && wx.indexOf('请') !== 0;
+    if (hasWx) {
+      $('wechatId').textContent = wx;
+      $('giftCta').textContent = g.cta || '复制客服微信';
+    } else if (CFG.qrImage) {
+      $('wechatId').textContent = '微信扫码添加客服';
+      $('giftCta').textContent = '怎么添加？';
+    } else {
+      $('wechatId').textContent = '请填写客服微信号';
+      $('giftCta').textContent = g.cta || '复制客服微信';
+    }
     if ($('serviceTipLine')) $('serviceTipLine').textContent = CFG.serviceTip || '';
 
     var qr = $('qrSlot');
-    qr.innerHTML = CFG.qrImage
-      ? '<img src="' + CFG.qrImage + '" alt="客服二维码">'
-      : '客服二维码位置<br>把图片放到 assets/ 后<br>在 config.js 里填写路径';
+    if (CFG.qrImage) {
+      qr.className = 'qr-slot has-img';
+      qr.innerHTML = '<img src="' + CFG.qrImage + '" alt="客服二维码">';
+    } else {
+      qr.className = 'qr-slot';
+      qr.innerHTML = '客服二维码位置<br>把图片放到 assets/ 后<br>在 config.js 里填写路径';
+    }
 
     $('modalGift').classList.add('on');
   }
@@ -532,10 +548,23 @@
     };
     $('btnGift').onclick = openGift;
     $('giftCta').onclick = function () {
-      var txt = CFG.serviceWechat || '';
-      if (!txt || txt.indexOf('请') === 0) { toast('客服微信还没配置，请在 config.js 里填写'); return; }
-      if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () { toast('客服微信已复制'); }, function () { toast('复制失败，请手动长按复制'); });
-      else toast('请长按微信号手动复制');
+      var txt = String(CFG.serviceWechat || '').trim();
+      var hasWx = !!txt && txt.indexOf('请') !== 0;
+      if (hasWx) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(txt).then(
+            function () { toast('客服微信已复制：' + txt, 2500); },
+            function () { toast('复制失败，请长按微信号手动复制', 3000); });
+        } else {
+          toast('请长按微信号手动复制', 3000);
+        }
+        return;
+      }
+      if (CFG.qrImage) {
+        toast('长按上面的二维码保存到相册，再用微信「扫一扫」→ 右上角「相册」识别添加', 4500);
+        return;
+      }
+      toast('客服微信还没配置，请在 config.js 里填写', 3000);
     };
     Array.prototype.forEach.call(document.querySelectorAll('[data-close]'), function (b) {
       b.onclick = function () { closeModal(b.dataset.close); };

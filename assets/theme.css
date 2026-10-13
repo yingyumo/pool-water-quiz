@@ -223,10 +223,12 @@ label.lb{display:block;font-size:14px;font-weight:600;margin:0 0 8px;color:var(-
 .refund{background:var(--gold-l);border-radius:12px;padding:14px;text-align:center;margin:14px 0 4px}
 .refund b{display:block;font-size:17px;color:#7A5410;font-weight:600;margin-bottom:3px}
 .refund span{font-size:13px;color:#9A6D1E}
-.qr-slot{width:150px;height:150px;margin:14px auto 8px;border-radius:12px;background:var(--soft);
+.qr-slot{width:150px;min-height:150px;margin:14px auto 8px;border-radius:12px;background:var(--soft);
   border:1px dashed var(--line2);display:flex;align-items:center;justify-content:center;
   text-align:center;font-size:12px;color:var(--ink3);padding:12px;line-height:1.6}
-.qr-slot img{width:100%;height:100%;object-fit:contain;border-radius:12px}
+/* 已配置二维码：容器改成自适应，让微信名片长图完整显示、扫码更清晰 */
+.qr-slot.has-img{width:auto;max-width:230px;min-height:0;padding:0;border:0;background:transparent}
+.qr-slot img{width:100%;height:auto;max-height:290px;object-fit:contain;border-radius:12px;display:block}
 .wechat-id{font-size:16px;font-weight:600;color:var(--ink);background:var(--soft);
   border-radius:10px;padding:11px 14px;text-align:center;margin:0 auto 4px;letter-spacing:.4px;
   display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
