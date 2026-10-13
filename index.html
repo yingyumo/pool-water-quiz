@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#F3FAFB">
+<meta name="format-detection" content="telephone=no">
+<title>泳池水质人格 · 你家池子是什么性格？</title>
+<meta name="description" content="30 道情景题，5 个水质维度，测出你的泳池是 7 种人格中的哪一种。面向泳池场馆运营者的趣味科普测评。">
+<style>
+/* 首屏防闪：脚本加载前隐藏所有视图 */
+.view{display:none}
+#boot{text-align:center;padding:80px 20px;color:#8AA6AE;font-size:14px}
+</style>
+<link rel="stylesheet" href="assets/theme.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="dot" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M12 3C12 3 6 10.2 6 14.2A6 6 0 0 0 18 14.2C18 10.2 12 3 12 3Z" fill="#0E8FA8" opacity=".85"/>
+        <path d="M12 8.5C12 8.5 9 12.4 9 14.4A3 3 0 0 0 15 14.4C15 12.4 12 8.5 12 8.5Z" fill="#fff" opacity=".9"/>
+      </svg>
+    </span>
+    <span id="brandName">泳池水质人格</span>
+  </div>
+  <span class="badge-lic" id="licBadge" style="display:none"></span>
+</header>
+
+<main class="wrap" id="main">
+
+  <div id="boot">正在加载…</div>
+
+  <!-- ==================== 1. 卡密门 ==================== -->
+  <section class="view" id="view-gate">
+    <div class="gate">
+      <div class="gate-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <rect x="4" y="10" width="16" height="10" rx="2.5" stroke="#0E8FA8" stroke-width="1.8"/>
+          <path d="M8 10V7.5a4 4 0 0 1 8 0V10" stroke="#0E8FA8" stroke-width="1.8" stroke-linecap="round"/>
+          <circle cx="12" cy="15" r="1.6" fill="#0E8FA8"/>
+        </svg>
+      </div>
+      <h1 class="center">输入卡密开始测试</h1>
+      <p class="lead center" style="margin-bottom:22px">卡密在购买后由客服提供，格式类似 <b>POOL-XXXX-XXXX</b>，每个卡密可测试 3 次。</p>
+
+      <label class="lb" for="keyInput">卡密</label>
+      <input id="keyInput" type="text" inputmode="text" autocomplete="off" autocapitalize="characters"
+             spellcheck="false" placeholder="POOL-XXXX-XXXX">
+      <div class="hint" id="gateHint" style="display:none"></div>
+
+      <div class="btn-row">
+        <button class="btn" id="gateBtn" type="button">开始测试</button>
+      </div>
+
+      <p class="tiny" style="margin-top:18px">
+        卡密不区分大小写，输错字母 <b>O</b> 和数字 <b>0</b> 时请留意——本店卡密不使用 <b>0 / O / I / L / 1</b>。
+        遇到问题请联系客服。
+      </p>
+    </div>
+  </section>
+
+  <!-- ==================== 2. 封面 / 选版本 ==================== -->
+  <section class="view" id="view-cover">
+    <div class="cover-hero">
+      <svg class="hero" viewBox="0 0 240 190" role="img" aria-label="池水拟人形象">
+        <ellipse cx="120" cy="150" rx="86" ry="15" fill="#DCEBEF"/>
+        <ellipse cx="120" cy="108" rx="58" ry="54" fill="#BFE6EE"/>
+        <ellipse cx="120" cy="108" rx="58" ry="54" fill="none" stroke="#0E8FA8" stroke-width="2" opacity=".5"/>
+        <path d="M86 88 q18 -14 34 -6" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" opacity=".8"/>
+        <circle cx="98" cy="106" r="10" fill="#fff" stroke="#12313A" stroke-width="2.6"/>
+        <circle cx="142" cy="106" r="10" fill="#fff" stroke="#12313A" stroke-width="2.6"/>
+        <path d="M108 106 h24" stroke="#12313A" stroke-width="2.6"/>
+        <circle cx="98" cy="106" r="3.2" fill="#12313A"/><circle cx="142" cy="106" r="3.2" fill="#12313A"/>
+        <path d="M104 128 q16 13 32 0" fill="none" stroke="#12313A" stroke-width="3" stroke-linecap="round"/>
+        <path d="M40 166 q20 -12 40 0 q20 12 40 0 q20 -12 40 0" fill="none" stroke="#9AD9E4" stroke-width="3" stroke-linecap="round"/>
+        <path d="M40 180 q20 -12 40 0 q20 12 40 0 q20 -12 40 0" fill="none" stroke="#4FB3C7" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="188" cy="70" r="7" fill="#E1F4F8" stroke="#0E8FA8" stroke-width="1.6"/>
+        <circle cx="174" cy="50" r="4.5" fill="#E1F4F8" stroke="#0E8FA8" stroke-width="1.6"/>
+      </svg>
+    </div>
+    <div class="center">
+      <span class="kicker">泳池场馆运营者专属 · 趣味科普测评</span>
+      <h1>泳池水质人格</h1>
+      <p class="lead">你家池子是什么性格？<br>5 个真实的水质管理维度，测出你的池子是 7 种人格中的哪一种。</p>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat"><b>5</b><span>水质维度</span></div>
+      <div class="stat"><b>30</b><span>情景题</span></div>
+      <div class="stat"><b>7</b><span>结果类型</span></div>
+    </div>
+
+    <div class="modes">
+      <button class="mode" type="button" data-mode="full">
+        <span class="ico">全</span>
+        <span class="tx"><b>完整版 · 约 5 分钟</b>
+          <span>30 道情景题 + 3 道误区识别题。五维雷达图 + 水质画像 + 理论依据 + 定制建议，结果最准。</span></span>
+      </button>
+      <button class="mode" type="button" data-mode="quick">
+        <span class="ico">快</span>
+        <span class="tx"><b>快测版 · 约 2 分钟</b>
+          <span>15 道核心题 + 3 道误区识别题。适合先体验，或直接发给朋友互测。</span></span>
+      </button>
+    </div>
+
+    <p class="tiny center" style="margin-top:16px">
+      本测评面向泳池 / 游泳馆 / 酒店 / 健身房 / 小区的运营管理者设计。<br>
+      结果仅供趣味科普与自我检视，不构成水质检测结论或卫生评价意见。
+    </p>
+  </section>
+
+  <!-- ==================== 3. 答题 ==================== -->
+  <section class="view" id="view-quiz">
+    <div class="qbar">
+      <span class="qn" id="qCount">1 / 33</span>
+      <span class="qdim" id="qDim">余氯自律度</span>
+    </div>
+    <div class="pbar"><i id="pbarIn" style="width:0%"></i></div>
+    <h2 class="qtext" id="qText"></h2>
+    <div class="opts" id="opts"></div>
+    <div class="nav-row">
+      <button class="btn ghost" id="prevBtn" type="button">上一题</button>
+      <button class="btn" id="nextBtn" type="button" disabled>下一题</button>
+    </div>
+    <p class="tiny center" style="margin-top:18px">可以随时返回上一题重新选择，答案会在本机保存。</p>
+  </section>
+
+  <!-- ==================== 4. 结果 ==================== -->
+  <section class="view" id="view-result">
+    <div id="resultBody"></div>
+  </section>
+
+</main>
+
+<!-- 底部操作条 -->
+<div class="actionbar" id="actionbar">
+  <button class="btn ghost" id="btnSave" type="button">保存结果长图</button>
+  <button class="btn" id="btnCopy" type="button">复制结果链接</button>
+  <button class="btn ghost" id="btnRetest" type="button">再测一次</button>
+  <button class="btn gold" id="btnGift" type="button">好评有礼</button>
+</div>
+
+<!-- 弹窗：好评有礼 -->
+<div class="modal" id="modalGift" role="dialog" aria-modal="true" aria-labelledby="giftTitle">
+  <div class="modal-mask"></div>
+  <div class="modal-box">
+    <button class="modal-close" type="button" data-close="modalGift" aria-label="关闭">✕</button>
+    <h3 id="giftTitle">好评有礼</h3>
+    <p class="muted" style="font-size:14.5px;margin-bottom:4px" id="giftLead"></p>
+
+    <ul class="gift" id="giftSteps"></ul>
+
+    <div class="refund">
+      <b id="giftRefundTitle"></b>
+      <span id="giftRefundSub"></span>
+    </div>
+
+    <div class="qr-slot" id="qrSlot"></div>
+    <div class="wechat-id"><span id="wechatId"></span></div>
+    <p class="tiny center" style="margin:8px 0 0" id="serviceTipLine"></p>
+
+    <div class="btn-row">
+      <button class="btn gold" id="giftCta" type="button">复制客服微信</button>
+      <button class="btn ghost" type="button" data-close="modalGift">我知道了</button>
+    </div>
+
+    <p class="tiny" style="margin-top:14px" id="giftNotice"></p>
+  </div>
+</div>
+
+<!-- 弹窗：长图预览 -->
+<div class="modal" id="modalImg" role="dialog" aria-modal="true" aria-label="结果长图">
+  <div class="modal-mask"></div>
+  <div class="modal-box" style="max-width:520px">
+    <button class="modal-close" type="button" data-close="modalImg" aria-label="关闭">✕</button>
+    <h3>结果长图</h3>
+    <p class="tiny" style="margin-bottom:12px">共 <span id="imgSize"></span>，可直接发到小红书、朋友圈或群里。</p>
+    <img id="imgStage" alt="泳池水质人格结果长图">
+    <p class="img-tip" id="imgTip" style="display:none"></p>
+    <div class="btn-row">
+      <button class="btn" id="imgDownload" type="button">保存图片</button>
+      <button class="btn ghost" id="imgShare" type="button" style="display:none">分享图片</button>
+      <button class="btn ghost" type="button" data-close="modalImg">关闭</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="assets/config.js"></script>
+<script src="assets/keyhash.js"></script>
+<script src="assets/keys.js"></script>
+<script src="assets/quiz-data.js"></script>
+<script src="assets/store.js"></script>
+<script src="assets/poster.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
